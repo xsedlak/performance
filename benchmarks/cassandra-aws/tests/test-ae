@@ -1,0 +1,7 @@
+load a
+a//time=300,target=10000
+e//time=120,target=30000
+a//time=300,target=10000
+e//time=120,target=60000
+a//time=300,target=10000
+e//time=120,target=90000

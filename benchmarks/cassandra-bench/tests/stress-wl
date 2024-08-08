@@ -1,0 +1,3 @@
+write,n=10000000
+sleep 30
+write,n=100000000

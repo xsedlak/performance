@@ -1,0 +1,53 @@
+#FILE_SYSTEM_ID=fs-7c4e72c8
+#FILE_SYSTEM_ADDRESS=10.22.4.175
+MOUNT_POINT=${MOUNT_POINT:-/efs}
+
+if [[ -z "${FILE_SYSTEM_ID}" && -z "${FILE_SYSTEM_ADDRESS}" ]]
+then
+    echo "Missing FILE_SYSTEM_ID and FILE_SYSTEM_ADDRESS!"
+    exit 1
+fi
+
+if [[ -z "${FILE_SYSTEM_ADDRESS}" ]]
+then
+    AVAILABILITY_ZONE=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
+    echo "AVAILABILITY_ZONE: ${AVAILABILITY_ZONE}"
+    REGION=${AVAILABILITY_ZONE:0:-1}
+    FILE_SYSTEM_ADDRESS="${FILE_SYSTEM_ID}.efs.${REGION}.amazonaws.com"
+fi
+
+pm=yum
+which apt-get && pm=apt-get
+echo "FILE_SYSTEM_ID: ${FILE_SYSTEM_ID}"
+echo "FILE_SYSTEM_ADDRESS: ${FILE_SYSTEM_ADDRESS}"
+echo "Mounting EFS share..."
+sudo mkdir -p ${MOUNT_POINT}
+sudo chown ${USER}:${USER} ${MOUNT_POINT}
+
+if grep -- " ${MOUNT_POINT} " /etc/fstab
+then
+    echo "Mount point is already in fstab: ${MOUNT_POINT}"
+elif grep -- " ${FILE_SYSTEM_ADDRESS} " /etc/fstab
+then
+    echo "Address is already in fstab: ${FILE_SYSTEM_ADDRESS}"
+else
+    echo ${FILE_SYSTEM_ADDRESS}:/ ${MOUNT_POINT} nfs4 nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,_netdev 0 0 | sudo tee -a /etc/fstab
+fi
+
+sudo $pm update -y > /dev/null
+sudo $pm install -y nfs-common > /dev/null
+sudo mount -a -t nfs4
+
+for ((i=0; i<12; i++))
+do
+    if [[ -d ${MOUNT_POINT}/dolphin ]]
+    then
+        echo "EFS mounted"
+        echo
+        break
+    fi
+    echo "NFS not mounted! Retrying..." 
+    sleep 10
+    sudo $pm install -y nfs-common > /dev/null
+    sudo mount -a -t nfs4
+done

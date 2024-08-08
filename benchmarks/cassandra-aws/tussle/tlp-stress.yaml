@@ -1,0 +1,42 @@
+warmupTime: 25
+runTime: 10
+targetRate: 120000
+
+highBound: 0
+startingRatePercent: 10
+startingHighBound: 0
+ratePercentStep: 2
+slaConfig:  [ [ "50", "1", "10000"], ["99", "10", "10000"], ["99.9", "50", "60000"], ["99.99", "200", "120000"], ["100", "1000", "120000" ] ]
+targetFactor:  1.01
+
+initCmd:
+  - bash
+  - -c
+  - echo INIT...
+
+resetCmd:
+  - bash
+  - -c
+  - echo RESET...
+
+cleanupCmd:
+  - bash
+  - -c
+  - echo CLEANUP...
+
+runCmd:
+  - bash
+  - -c
+  - echo RUN... geonames//noindex-tp,wtp={warmupTime},tp={runTime},tt={targetRate}
+  - ./run_tlpstress_zing_tussle.sh
+
+runEnv:
+  - RESULTS_DIR=results_tlp-stress_step{runStep}_wtp{warmupTime}_tp{runTime}_tt{targetRate}
+  - TARGET_RATE={targetRate}
+  - WARMUP_TIME={warmupTime}
+  - RUN_TIME={runTime}
+  - TESTRUNNER_THREADS=10
+  - NODES=node1-r5d.2xlarge,node2-r5d.2xlarge,node3-r5d.2xlarge
+
+resultFiles:
+  - tlp_stress_metrics_0.hdr-.*

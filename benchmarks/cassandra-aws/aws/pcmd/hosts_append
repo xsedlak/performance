@@ -1,0 +1,22 @@
+echo
+echo "Hosts before:"
+cat /etc/hosts
+echo
+h1=$(cat /etc/hosts)
+echo "${HOSTS}" | while read hl
+do
+    [[ -n "${hl}" ]] || continue
+    grep -q -- "${hl}" /etc/hosts && continue
+    echo "adding: ${hl}"
+    echo "$hl" | sudo tee -a /etc/hosts
+done
+h2=$(cat /etc/hosts)
+echo
+if [[ "$h1" == "$h2" ]]
+then
+    echo "Hosts not changed"
+else
+    echo "Hosts after:"
+    cat /etc/hosts
+    echo
+fi

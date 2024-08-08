@@ -1,0 +1,13 @@
+load a
+a//time=300,target=10000
+b//time=300,target=10000
+c//time=300,target=10000
+d//time=300,target=10000
+e//time=300,target=10000
+f//time=300,target=10000
+a//time=300,target=50000
+b//time=300,target=50000
+c//time=300,target=50000
+d//time=300,target=50000
+e//time=300,target=50000
+f//time=300,target=50000

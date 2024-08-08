@@ -1,0 +1,60 @@
+
+cat_files() {
+    local path=${1}
+    local p_file
+    for p_file in $(ls "${path}")
+    do
+        if [[ -f "${path}/$p_file" ]]
+        then
+            echo -n "$p_file: "
+            cat "${path}/$p_file"
+        fi
+    done
+}
+
+print_thp_info() {
+    local thp_path
+    if [[ -d /sys/kernel/mm/transparent_hugepage ]]
+    then
+        thp_path=/sys/kernel/mm/transparent_hugepage
+    elif [[ -d /sys/kernel/mm/redhat_transparent_hugepage ]]
+    then
+        thp_path=/sys/kernel/mm/redhat_transparent_hugepage
+    fi
+    [[ -d "${thp_path}" ]] || return
+    echo "THP path: ${thp_path}"
+    cat_files ${thp_path}
+}
+
+echo "-------------------- uname ----------------------"
+uname -a
+echo
+echo "-------------------- cpuinfo --------------------"
+lscpu || cat /proc/cpuinfo
+echo
+echo "-------------------- thpinfo -------------------"
+print_thp_info
+echo
+echo "-------------------- meminfo --------------------"
+cat /proc/meminfo
+echo
+free
+echo
+echo "-------------------- zst ------------------------"
+zing-ps -s
+echo
+echo "-------------------- ulimit ---------------------"
+ulimit -a
+echo
+echo "-------------------- env ------------------------"
+env
+echo
+echo "-------------------- diskinfo -------------------"
+df -h
+echo
+echo "-------------------- lsblk -------------------"
+lsblk
+echo
+echo "-------------------- sysctl ---------------------"
+sysctl -a
+echo

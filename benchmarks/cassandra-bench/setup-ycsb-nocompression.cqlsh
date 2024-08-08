@@ -1,0 +1,26 @@
+create keyspace ycsb
+     WITH REPLICATION = {'class' : 'SimpleStrategy', 'replication_factor': 1 };
+use ycsb;
+create table usertable (
+     y_id varchar primary key,
+     field0 varchar,
+     field1 varchar,
+     field2 varchar,
+     field3 varchar,
+     field4 varchar,
+     field5 varchar,
+     field6 varchar,
+     field7 varchar,
+     field8 varchar,
+     field9 varchar,
+     field10 varchar,
+     field11 varchar,
+     field12 varchar,
+     field13 varchar,
+     field14 varchar,
+     field15 varchar,
+     field16 varchar,
+     field17 varchar,
+     field18 varchar,
+     field19 varchar);
+ALTER TABLE usertable WITH COMPRESSION = {'sstable_compression': ''};

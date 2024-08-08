@@ -1,0 +1,21 @@
+hosts:  [ "localhost" ]
+port:  9042
+threads:  4
+fieldcount:  20
+recordcount:  1000000
+requestdistribution:  zipfian
+core_workload_insertion_retry_limit:  2
+measurementtype:  hdrhistogram
+status_interval:  1
+cassandra_maxconnections:  12
+cassandra_coreconnections:  12
+operationcount:  0
+workload:  workloads/workloadc
+time:  120
+warmupTime:  30
+highBound: 0
+startingRatePercent:  10
+startingHighBound: 0
+ratePercentStep:  2
+slaConfig:  [ [ "50", "1", "10000"], ["99", "10", "10000"], ["99.9", "50", "60000"], ["99.99", "200", "120000"], ["100", "1000", "120000" ] ]
+targetFactor:  1.01
