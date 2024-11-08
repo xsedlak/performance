@@ -1,3 +1,0 @@
-[connection]
-port = PORT
-factory = cqlshlib.ssl.ssl_transport_factory

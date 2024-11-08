@@ -1,5 +1,0 @@
-load f
-restart
-warmup f//warmups=20,threads=400
-f//time=300
-f//time=300

@@ -1,7 +1,0 @@
-pm=yum
-which apt && pm=apt-get
-echo "Remote update (${pm})..."
-sudo ${pm} update -y
-echo "Installing basic packages (${pm})..."
-sudo ${pm} install wget zip unzip bc mc git -y
-sudo ${pm} install sysstat -y
