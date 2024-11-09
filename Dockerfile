@@ -18,7 +18,7 @@ RUN add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/debian \
    $(lsb_release -cs) \
    stable"
-RUN apt-get update && apt-get install -y docker-ce-cli
+RUN apt-get update && apt-get install -y docker.io
 
 # Switch back to user jenkins
 USER jenkins
