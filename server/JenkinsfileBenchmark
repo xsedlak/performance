@@ -1,0 +1,73 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'BENCHMARKS', defaultValue: 'cpu,memory,disk', description: 'Comma-separated list of benchmarks to run')
+    }
+
+    stages {
+        stage('Prepare') {
+            steps {
+                // Prepare the environment for benchmarks
+                sh 'echo "Preparing environment for benchmarks"'
+                // Add steps for environment setup, tool installation, etc.
+            }
+        }
+
+        stage('Run Benchmarks') {
+            steps {
+                script {
+                    // Split the input string into a list of benchmarks
+                    def benchmarkList = params.BENCHMARKS.split(',')
+
+                    // Iterate through each benchmark
+                    benchmarkList.each { benchmark ->
+                        stage("Benchmark: ${benchmark}") {
+                            try {
+                                // Run the specific benchmark
+                                runBenchmark(benchmark)
+                            } catch (Exception e) {
+                                // Mark the build as failed if a benchmark fails
+                                currentBuild.result = 'FAILURE'
+                                error("Benchmark ${benchmark} failed: ${e.message}")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Collect Results') {
+            steps {
+                // Collect and process benchmark results
+                sh 'echo "Collecting and processing benchmark results"'
+                // Add steps for result collection and processing
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up after benchmarks, regardless of the outcome
+            sh 'echo "Cleaning up after benchmarks"'
+            // Add cleanup steps here
+        }
+    }
+}
+
+// Function to run a specific benchmark
+def runBenchmark(String benchmarkType) {
+    switch(benchmarkType.trim().toLowerCase()) {
+        case 'cpu':
+            sh 'sysbench cpu --cpu-max-prime=20000 run'
+            break
+        case 'memory':
+            sh 'sysbench memory --memory-block-size=1K --memory-total-size=10G run'
+            break
+        case 'disk':
+            sh 'sysbench fileio --file-test-mode=rndrw run'
+            break
+        default:
+            error("Unknown benchmark type: ${benchmarkType}")
+    }
+}
