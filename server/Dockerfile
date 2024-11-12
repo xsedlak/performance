@@ -10,7 +10,8 @@ RUN apt-get update && apt-get install -y \
     ca-certificates \
     curl \
     gnupg2 \
-    software-properties-common
+    software-properties-common \
+    vim
 
 # Install the Docker CLI (for the ability to run Docker commands from Jenkins)
 RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -

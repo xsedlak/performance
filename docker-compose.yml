@@ -1,14 +1,43 @@
-version: '3'
 services:
-  jenkins:
-    build: .
+
+  socket-proxy:
+    image: tecnativa/docker-socket-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - CONTAINERS=1
+    networks:
+      - socket-network
+
+  server:
+    build: ./server
+    networks:
+      - socket-network
+    environment:
+      - DOCKER_HOST=tcp://socket-proxy:2375
     ports:
       - "8081:8080"
       - "50001:50000"
     volumes:
-      - jenkins_home:/var/jenkins_home
+      - server_home:/var/jenkins_home
+    restart: unless-stopped
+
+  client:
+    build: ./client
+    networks:
+      - socket-network
+    environment:
+      - DOCKER_HOST=tcp://socket-proxy:2375
+    ports:
+      - "3000:3000"  # Adjust the ports as needed
+    volumes:
+      - client_home:/testing
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
 
+networks:
+  socket-network:
+
 volumes:
-  jenkins_home:
+  server_home:
+  client_home:

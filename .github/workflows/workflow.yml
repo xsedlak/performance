@@ -1,0 +1,4 @@
+permissions:
+  contents: read
+  packages: write
+  metadata: read
