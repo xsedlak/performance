@@ -21,7 +21,7 @@ RUN pip install -r requirements.txt
 
 # Create work directory and copy test scripts
 RUN mkdir /app
-COPY testing/python_smoke_test.py /app
+COPY testing/python_performance_test.py /app
 COPY testing/jmeter_test.jmx /app
 
 WORKDIR /app
