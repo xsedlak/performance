@@ -41,7 +41,6 @@ pipeline {
             steps {
                 // Collect and process benchmark results
                 sh 'echo "Collecting and processing benchmark results"'
-                // Add steps for result collection and processing
             }
         }
     }
@@ -50,7 +49,6 @@ pipeline {
         always {
             // Clean up after benchmarks, regardless of the outcome
             sh 'echo "Cleaning up after benchmarks"'
-            // Add cleanup steps here
         }
     }
 }
@@ -62,10 +60,10 @@ def runBenchmark(String benchmarkType) {
             sh 'sysbench cpu --cpu-max-prime=20000 run'
             break
         case 'memory':
-            sh 'sysbench memory --memory-block-size=1K --memory-total-size=10G run'
+            sh 'cd /tmp && sysbench memory --memory-block-size=1K --memory-total-size=10G run'
             break
         case 'disk':
-            sh 'sysbench fileio --file-test-mode=rndrw run'
+            sh 'cd /tmp && sysbench fileio --file-test-mode=rndrw run'
             break
         default:
             error("Unknown benchmark type: ${benchmarkType}")
