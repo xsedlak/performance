@@ -20,16 +20,13 @@ RUN add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/debian \
    $(lsb_release -cs) \
    stable"
-RUN apt-get update && apt-get install -y docker.io
+RUN apt-get update && apt-get install -y docker-ce-cli
 
 # Switch back to user jenkins
 USER jenkins
 
-# Install some useful Jenkins plugins
-RUN jenkins-plugin-cli --plugins \
-    workflow-aggregator \
-    git \
-    docker-workflow
+COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN jenkins-plugin-cli -f /usr/share/jenkins/ref/plugins.txt
 
 # Expose ports for Jenkins web interface and agents
 EXPOSE 8080

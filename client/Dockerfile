@@ -26,4 +26,10 @@ COPY testing/jmeter_test.jmx /app
 
 WORKDIR /app
 
-CMD ["python", "python_smoke_test.py"]
+# Expose ports
+EXPOSE 3000
+
+# Set the container to start a shell and wait for user interaction
+CMD ["sh"]
+#CMD ["python", "python_performance_test.py"]
+#CMD ["sh", "-c", "jmeter -n -t /app/jmeter_test.jmx"]
